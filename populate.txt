@@ -1,0 +1,7 @@
+INSERT INTO users(user_id, screen_name, location, utc_offset, time_zone, follower_count, language, description, status_count, friends_count, created_at) SELECT DISTINCT bad_giant_table.user_id, bad_giant_table.user_screen_name, bad_giant_table.user_location, bad_giant_table.user_utc_offset, bad_giant_table.user_time_zone, bad_giant_table.user_followers_count, bad_giant_table.user_lang, bad_giant_table.user_description, bad_giant_table.user_status_count, bad_giant_table.user_friends_count, bad_giant_table.user_created_at FROM bad_giant_table;
+
+INSERT INTO tweet(tweet_id, created_at, text, in_reply_to_user_id, retweet_count, source, retweet_tweet_id, user_id) SELECT tweet_id, created_at, text, in_reply_to_user_id, retweet_count, tweet_source, retweet_of_tweet_id, user_id FROM bad_giant_table;
+
+INSERT INTO hashtag(hashtag1, hashtag2, hashtag3, hashtag4, hashtag5, hashtag6) SELECT hashtag1, hashtag2, hashtag3, hashtag4, hashtag5, hashtag6 FROM bad_giant_table;
+
+INSERT INTO tweet_hashtag(tweet_id, hashtag_id) SELECT tweet.tweet_id, hashtag.hashtag_id FROM tweet, hashtag, bad_giant_table WHERE (hashtag.hashtag1=bad_giant_table.hashtag1 AND hashtag.hashtag2=bad_giant_table.hashtag2 AND hashtag.hashtag3=bad_giant_table.hashtag3 AND hashtag.hashtag4=bad_giant_table.hashtag4 AND hashtag.hashtag5=bad_giant_table.hashtag5 AND hashtag.hashtag6=bad_giant_table.hashtag6) AND (tweet.tweet_id=bad_giant_table.tweet_id);
