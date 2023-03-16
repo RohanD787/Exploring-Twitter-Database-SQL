@@ -1,29 +1,34 @@
+-- How many tweets are there in total?
 SELECT count(tweet_id) FROM Tweet;
 
+-- How are these tweets distributed across languages? Write a query that shows, for every language (user_lang) the number of tweets in that language.
 SELECT language, count(tweet_id) AS Tweets FROM Users, Tweet WHERE Tweet.user_id = Users.user_id GROUP BY language;
 
+-- For each language, the fraction of total tweets that have that language setting, as well as the fraction of the number of users that have that language setting.
 SELECT language, CAST((SELECT COUNT(tweet.tweet_id) FROM tweet,users WHERE tweet.user_id = users.user_id) AS FLOAT) / CAST((SELECT COUNT(tweet_id) FROM tweet) AS FLOAT) FROM users GROUP BY language;
 
-
-
+-- What fraction of the tweets are retweets?
 SELECT CAST((SELECT COUNT(tweet_id) FROM tweet WHERE retweet_count>0) AS FLOAT)/CAST((SELECT COUNT(tweet_id) FROM tweet) AS FLOAT) AS fraction_of_tweets_retweeted;
 
+-- Compute the average number of retweets per tweet.
 SELECT AVG(retweet_count) AS average_no_of_retweets_per_tweet FROM tweet;
 
+-- What fraction of the tweets are never retweeted?
 SELECT CAST((SELECT COUNT(tweet_id) FROM tweet WHERE retweet_count = 0) AS FLOAT) / CAST((SELECT COUNT(tweet_id) FROM tweet) AS FLOAT) AS fraction_of_tweets_never_retweeted;
 
+-- What fraction of the tweets are retweeted fewer times than the average number of retweets (and what does this say about the distribution)?
 SELECT CAST((SELECT COUNT(tweet_id) FROM tweet WHERE retweet_count>(SELECT AVG(retweet_count) FROM tweet)) AS FLOAT) / CAST((SELECT COUNT(tweet_id) FROM tweet) AS FLOAT) AS retweed_less_than_average;
 
-
-
+-- What is the number of distinct hashtags found in these tweets?
 SELECT COUNT(SELECT hashtag_id FROM hashtag WHERE hashtag1,hashtag2,hashtag3,hashtag4,hashtag5,hashtag6 IN (SELECT hashtag1 FROM hashtag INTERSECT SELECT hashtag2 FROM hashtag INTERSECT SELECT hashtag3 FROM hashtag INTERSECT SELECT hashtag4 FROM hashtag INTERSECT SELECT hashtag5 FROM hashtag INTERSECT SELECT hashtag6 FROM hashtag)) FROM hashtag;
 
+-- What are the top ten most popular hashtags, by number of usages?
 SELECT COUNT(*) FROM hashtag WHERE hashtag1,hashtag2,hashtag3,hashtag4,hashtag5,hashtag6 IN (SELECT hashtag1 FROM hashtag INTERSECT SELECT hashtag2 FROM hashtag INTERSECT SELECT hashtag3 FROM hashtag INTERSECT SELECT hashtag4 FROM hashtag INTERSECT SELECT hashtag5 FROM hashtag INTERSECT SELECT hashtag6 FROM hashtag)) FROM hashtag ORDER BY COUNT(*) DESC LIMIT 10;
 
+-- Write a query giving, for each language, the top three most popular hashtags in that language.
 SELECT language, COUNT(*) FROM hashtag,tweet,user WHERE hashtag1,hashtag2,hashtag3,hashtag4,hashtag5,hashtag6 IN (SELECT hashtag1 FROM hashtag INTERSECT SELECT hashtag2 FROM hashtag INTERSECT SELECT hashtag3 FROM hashtag INTERSECT SELECT hashtag4 FROM hashtag INTERSECT SELECT hashtag5 FROM hashtag INTERSECT SELECT hashtag6 FROM hashtag)) FROM hashtag ORDER BY language DESC LIMIT 3;
 
-
-
+-- How many tweets are neither replies, nor replied to?
 SELECT COUNT(tweet_id) FROM tweet WHERE in_reply_to_user_id = NULL; 
 
 
